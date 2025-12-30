@@ -1,0 +1,541 @@
+
+
+-----------------------------------------------------------
+
+/bin - binary file  - executable file (Ex: unix/Linux commands)
+		     (ex: /bin/date ; /bin/uname )
+
+/usr/bin - binary file - installed commands/utility  (Ex: unix/Linux commands)
+
+/sbin - binary file - root user only can run - Unix/Linux Admin commands
+
+
+whereis <command>
+
+/boot - bootloader code + Kernel 
+
+/dev - device files - special device - device related info 
+
+/etc - Configuration directory - Config files are readable by user 
+
+
+/bin/fileA <== act as a command - executable binary file - user can't read the data
+
+/etc/fileA  <== this is config file not a command - user can read the data (ex: cat /etc/fileA ->OK)
+
+/home - non-root user login directory
+/root - root user login directory
+
+/lib
+/lib64
+--------------// library files ( file.so <== shared object file)
+
+/proc - process details (or) current state of working kernel 
+
+
+/var/log  ------ log files 
+/var/mail
+/var/www
+
+/mnt (or) /media (or) /run --- external device mount point directory 
+----------------------------------------------------------------------------------------------
+vi/vim - editor
+
+line copy => press ESC -> yy (Copy) - copy the line 
+			  p (paste) 
+		
+word copy => press ESC -> yw ->p 
+
+
+delete the line => press ESC -> dd 
+
+press ESC -> u (undo)
+press ESC -> . (redo) 
+
+delete the word -> press ESC -> dw 
+delete char  ---> press ESC -> x 
+
+Nyy  => 2yy --> 2lines are copied
+        3yy --> 3lines are copied 
+
+	5yy --> 5lines are copied 
+
+
+	5yw ==> 5words are copied 
+
+Ndd => 3dd ==> 3lines are deleted 
+       
+       3dw ==>3words are deleted
+
+       5x ==> 5chars are deleted 
+--------------------------------------------------------------------
+yy --> p (Copy -> Paste)
+
+dd --->p ( Cut -> Paste)
+------------------------------------------
+
+vi p1.txt{enter}
+
+data1
+data2 <== press ESC -> o (small) Vs press ESC --> O (upper)
+data3
+data4
+------------------------------------------
+
+:w <== write
+:wq <== write and quit
+
+:q! <== force to quit
+------------------------------------------------
+
+###########################################################################################
+
+To view the contents 
+--------------------
+cat filename
+
+more filename    -> q - quit
+
+less filename - page by page - PageUp PageDown Home End //Keys  -> q - quit 
+
+head filename - Display - Top 10 lines (from top to bottom)
+
+head -n 5 filename <== display top 5lines 
+head -n 15 filename <== display top 15lines 
+
+tail filename - Display - bottom 10lines (from bottom to top)
+====
+###########################################################################################
+
+userA@hostname~]$ <command> {Enter}
+		     |
+		     |
+	--------------------------
+	|                        |
+     STDOUT                   STDERR
+
+userA@hostname~]$ uname
+Linux <== STDOUT
+
+userA@hostname~]$ unammeee
+command unameee not found <== STDERR 
+
+Redirection
+------------
+Create a newfile and write command result(STDOUT) to external file
+----------------     ==============================================
+
+> --> Create and write
+
+userA@hostname~]$ <command>  >NewFile
+			      ======== if file is already exists - overwrite 
+
+append - adding new text at the end of the line - won't overwrite 
+======
+ >> 
+------------------------------------------------------------------------------------------
+
+FD = 0 (<STDIN>)
+FD = 1 (STDOUT)
+FD = 2 (STDERR)
+    ---------------// pre-defined FD
+
+
+date >d1.log  ---> same as ==> date 1>d1.log 
+
+datee 2>err.log
+
+command >result.log  2>err.log
+.......      |             |
+ | |_________|             |
+ |                         |
+ |_________________________|
+
+
+
+uname >r1.log 2>r2.log
+
+Monitor >r1.log 2>r2.log
+
+userA@host~]$ mkdir /D1  2>err.log
+=====================================================================================
+grep - search a pattern from inputFile 
+----
+grep -option pattern inputFile
+	     =======
+
+grep sales emp.csv
+
+grep -i hr emp.csv
+
+How to search bash keyword from /etc/passwd file ?
+=====================================================
+ grep bash /etc/passwd
+
+ grep -i bash /etc/passwd
+
+======================================================
+
+grep -i apache /var/log/webserver/httpd.log 
+---------------------------------------------
+  Apache ....
+... apache ....
+APACHE ...
+apache ...
+---------------------//matched 
+
+grep 
+ -i <== ignore pattern case
+ -n <== matched pattern line Number
+ -c <== count
+
+ -e <== extended pattern - multiple pattern 
+ ---	 
+ -v <== except the given pattern
+---------------------------------------------------
+
+find 
+-----
+ |-> Search a file (or) Directory
+ 
+ |-> by default -> recursive search 
+ 
+ |-> find <SearchPath> -name <SearchFile>
+
+root@host~]# find /etc -name httpd.conf
+
+/etc/httpd.conf
+/etc/D1/httpd.conf
+/etc/D1/D2/httpd.conf
+/etc/network/httpd.conf
+/etc/L1/L2/L3/L4/httpd.conf
+
+root@host~]# find  -name httpd.conf
+                 ^^
+		 |->if you omit this input directory path =>Search from Current Directory
+
+./httpd.conf
+./D1/httpd.conf
+---
+
+Task
+-----
+Go to login path
+|
+create directory => L1/
+		      |__L2/
+			  |__L3/
+			       |__L4/
+
+copy emp.csv file to each directory
+|
+ls -R L1
+|
+using find command - search emp.csv file from login directory
+		   - search emp.csv file from L1/ ..
+
+
+cd {Enter} # Go to login path
+
+mkdir -p L1/L2/L3/L4 
+
+cp emp.csv L1
+cp emp.csv L1/L2
+cp emp.csv L1/L2/L3
+cp emp.csv L1/L2/L3/L4
+
+ls -R L1
+
+ubuntu@ubuntu01~]$ find -name emp.csv
+|
+ubuntu@ubuntu01~]$ find L1 -name emp.csv
+|
+ubuntu@ubuntu01~]$ find L1/L2 -name emp.csv
+|
+ubuntu@ubuntu01~]$ find -name "*.csv"
+=====================================================================================
+cut 
+----
+ |-> cut the chars (or) field based on sep
+
+cut -c N inputFile 
+remove Nth char from inputFile
+
+cut -c N,M inputFile
+       ----
+from Nth Chars to Mth chars
+
+cut -c 2 emp.csv # remove 2nd chars
+
+cut -c 5 emp.csv # remove 5th chars
+
+cut -c 2,5 emp.csv # remove from 2nd Chars and 5th Chars
+       ---
+
+cut -c 2-5 emp.csv # remove from 2nd Chars to 5th Chars
+       ---
+
+
+101,raj,sales,pune,1000
+102,leo,prod,bglore,2000
+103,anu,HR,chennai,3000
+------------------------
+  |->Filter column based => -d<sep> -f<Number>
+
+cut -d, -f1 emp.csv
+101
+102
+103
+
+cut -d, -f2 emp.csv
+raj
+leo
+anu
+
+cut -d, -f1,3 emp.csv
+101,sales
+102,prod
+103,HR
+
+cut -d, -f1-3 emp.csv
+101,raj,sales
+102,leo,prod
+103,anu,HR
+===============================================================================
+We can connect from command1 result -> command2 so on  //pipeline 
+
+A = 5 + 3
+B = A + 2
+C = B + 1
+display C Value
+
+A - indepenent 
+B - depends on A
+C - depends on B
+
+A | B | C 
+
+command1 | command2  | command3
+ |           | ...       |
+result       | ^ |_______|
+ |           | |
+ |----->-----
+
+grep sales emp.csv # Single Command
+-----------------
+
+cat emp.csv |grep sales # Two process
+===========   ========
+
+---------------------------------------------------
+Task
+-----
+a. display 1st 15lines result from /etc/passwd file
+b. display 1st 15lines result from /etc/passwd file - search pattern daemon
+c. display 1st 15lines result from /etc/passwd file - search pattern daemon 
+                                                    - count the number of lines
+cat /etc/passwd
+
+cat /etc/passwd | head -n 15 
+
+cat /etc/passwd | head -n 15 | grep daemon
+
+cat /etc/passwd | head -n 15 | grep daemon|wc -l
+
+===============================================================================
+
+echo "userA:x:bin:bash"|cut -d: -f1  => userA
+
+echo "userA:x:bin:bash"|cut -d: -f2  => x
+
+echo "userA:x:bin:bash"|cut -d: -f3  => bin
+
+echo "userB-x-bin:ksh" |cut -d: -f1  => userB-x-bin
+===============================================================================
+sort
+-----
+sort filename    # ascending order
+sort -r filename # descending order
+
+display list of sales dept emp's in sorted order
+------------------------------------------------
+cat emp.csv|grep sales|cut -d, -f2|sort
+
+cat emp.csv|grep sales|cut -d, -f2|sort|wc -l
+
+==================================================================================
+
+echo "Hello Unix and Linux world"
+|    |__________________________|
+|                |->Single Argument 
+| 
+command  
+
+echo "data1\ndata2\ndata3\ndata4" {Enter}
+
+echo -e "data1\ndata2\ndata3\ndata4" {Enter}
+
+userA@hostname~]$
+-----------------
+ |->primary prompt
+
+> -->secondary prompt
+
+userA@hostname~]$ echo "data1{Enter}
+>data2 {Enter}
+>data3 {Enter}
+>data4 {Enter}
+>data5" {Enter}
+
+data1
+data2
+data3
+data4
+data5 
+----------------------------------------------------------------------------
+File Permission
+----------------
+
+vi filename
+...
+...
+:wq 
+
+ls -l filename 
+
+<fileType><Permission> <linkCount> <UserName> <GroupName> <FileSize> date/time <fileName>
+
+mkdir Demo # Directory -- Folder
+	|
+	default => . .. 
+		   -----//default hidden directories 
+	|
+	ls -a Demo
+	.
+	..
+	----------
+
+ls -l 
+d..... 3  ..Demo
+       |
+       3-2
+	 |-> . ..
+========================================================================================
+ 
+File(F) 
+---------
+ |-> 3 mode(operation)
+     ==================
+	read	 r  --> cat filename  
+	write	 w  --> vi ; mkdir ; cd ; > ; >> //write operation
+	execute	 x
+
+read/write = User level 
+             -----------
+
+execute = Kernel level 
+          -------------
+each file - by 3 users
+	    ============
+	    |-> user (or) author (or) owner 
+	    |-> group - collection of users 
+	    |-> others
+ 
+sales	  prod		HR   <== group 
+=============================
+arun      leo		theeb
+vijay	  paul		raj
+anu	
+
+Login: arun
+password:
+
+arun@host01~]$ vi p1.txt
+Hello
+:wq
+
+arun@host01~]$ ls -l p1.txt
+
+-rw-rw-r-- 1 arun sales ..... p1.txt
+		
+
+
+Each user can perform 3 operations
+		      ============
+			read
+			write
+			execute
+
+user -> read/write/execute
+
+group -> read/write/execute
+
+others -> read/write/execute
+
+ rwxrwxrwx
+ ===___.....
+  |  |    |--->others
+  |  group
+  user
+
+ rw-rw-r--
+ -----------
+  |->user - can do read/write
+  |->group - can do read/write
+  |
+  |->others - read only
+
+
+
+How to assign the file permission?
+       ======
+chmod user_details + mode filename 
+				
+Give user execute permission to p1 file
+     ---- ======= 
+chmod u+x p1
+ 
+To remove execute permission from user 
+   =======
+chmod u-x p1
+
+==================================================================
+Task
+-----
+create a new file
+|
+display - kernel name and kernel version
+	  sleep 1
+	- login name
+	  sleep 1
+	- current working directory
+	  sleep 1
+	- Thank you message
+|
+Save this file , Give Execute Permission and run this file
+					     -------------
+						./filename
+Then redirect execution results to external file
+-------------------------------------------------------------------------
+command with another command
+
+echo "Working Kernel name is:`uname`"
+
+`` <== backquote
+---
+ |->this is NOT a single quote
+
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
