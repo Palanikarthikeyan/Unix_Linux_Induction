@@ -1,0 +1,520 @@
+OS 
+---
+ |--->System Software 
+ |--->Interface between user and Hardware 
+
++---------------------------+
+| User
++---------------------------+
+| OS
++---------------------------+
+| H/W
++---------------------------+
+
+Unix
+----
+OS = Kernel + Utilities 
+
+Kernel - Core part of an OS
+
+GNUProject - 1983
+--------------------
+|
+|
+Linux - Kernel 
+-----
+
+GNUProject - GNULinux - 1991 
+
+
+RedHat
+Ubuntu
+LinuxMint
+OracleLinux
+..
+
+RedHatLinux
+-------------
+ |-> uname ==>Linux
+ |-> date -->date result
+
+ |-> Install webserver  ==> yum install httpd (or) dnf install httpd 
+
+Ubuntu Linux
+---------------
+ |-> uname ==>Linux
+ |-> date ==>date result
+
+ |-> Install webserver ==> apt-get install apache2 (or) apt install apache2 
+
+======================================================================================
+
+Shell - Interface between user and kernel 
+                          ===============
+
++--------------------------
+| User: Application
+|-------------------//Shell 
+|  
+|  OS 
+|
++---------------------------
+| H/W:
+|
++---------------------------
+
+Types of shell
+-----------------
+1.BourneShell (sh)           
+2.KornShell(ksh)  --> ksh93  
+|
+3. CShell(csh) 
+|
+4. BourneAgainShell(BASH) -- GNUProject  // default shell in Linux 
+
+OFF => Switch On PC ==>POST(Power Self Test)
+			|
+			MasterBootRecord(MBR)
+			|
+			BootLoader - Grub/Grub2 - Grand Unified Boot Loader 
+			|
+			Load the Kernel 
+			|
+			Process
+			|
+			|
+			Login =>  Login:_______ Password:_________
+
+			|
+			Shell - Commandline Interface(CLI)  Vs 	Desktop (GUI)
+			|||					 |||
+			User IO - User process 			
+			|||
+			command					 on click //GUI
+==================================================================================================
+
+Kernel - File , Process
+======  -----------------
+
+ User
+ |
+Kernel - File,Process
+ |
+H/W
+
+File - Data - Underthe storage device (ex: HardDisk ) 
+
+Process - Data - Underthe CPU //Execution 
+
+User: javac p1.java  python p1.py  gcc p1.c mysql -u root -p ...  ..... <== Application
+
+		 print("Hello")   printf("Hello")  echo "Hello"  puts("Hello") 
+
+      ______________________________________________________________//Shell 
+		|
+		File,Process
+
+
+ User:
+ -------------------//shell-----------------
+	|
+	systemcall() = FD (File Descriptor)  FD = 0 (STDIN) ; FD = 1 (STDOUT) ; FD = 2 (STDERR)
+					     FD = 0x12345 <== memory related 
+					     FD = 3 to 2 pow 32/64 -- ValidCalls 
+					     FD = -1 <== Failed Call
+
+
+	write(1,"Hello") = FD 
+
+
+
+ User:
+ -------------------//shell-----------------
+	|
+	systemcall() = FD (File Descriptor) 
+	|
+	FileSystem -- data structure 
+		      ===============
+			|-> How the files are organized inside the storage device
+			|-> file permission
+
+
+ User:
+ -------------------//shell-----------------
+	|
+	systemcall() = FD (File Descriptor) 
+	|                     +------------------------+
+	FileSystem <----> PCB |IPC;SCHED;Memory;Network|
+	|		      +------------------------+
+	|
+	Device Driver
+	|
+	Device Controller 
+	|
+------------------------------------------------
+Hardware 
+
+###############################################################################################
+
+unix/linux - command based os.
+
+command - executable binary file 
+
+all the unix/linux commands are lowercase chars 
+
+
+
+Login as: karthik
+Password:
+|
+karthik@hostname~]$ 
+---------------------//primary prompt 
+
+Login as: anu
+Password: 
+|
+anu@hostname~]$
+--------------------//primary prompt
+
+[LoginName]@[Hostname]~]$
+  |		|
+whoami		hostname
+
+
+root user	- admin	
+====
+ |->
+non-root user	- guest 
+
+
+Login as: root
+Password: 
+|
+root@hostname~]# 
+----------------------//primary prompt
+
+~ --> Login directory symbol
+
+root user login =>  /root 
+
+non-root user login ==> /home/non-root 
+================================================================
+
+clear 
+date
+cal
+uname
+hostname
+pwd
+whoami
+
+echo 
+echo Hello unix and Linux
+
+echo "Hello unix and Linux"
+
+echo "asdfasfasfsdfsaf assafasdfsafs"
+================================================================
+Unix and Linux Command structures
+---------------------------------
+1. Command only style  (ex: whoami pwd date ..)
+
+2. Command with argument style(ex: echo Hello Unix ; echo "Hello unix"; sleep 5; sleep 10; sleep 600; 
+                                   sleep 3600)
+
+3. Command with another command
+--------------------------------------------------------
+
+sleep<space>3  Vs  sleep3 
+-------------      =======
+ |-> OK		    |->Error 
+
+=======================================================================================
+ls
+
+directory -->Folder
+|
+To create a new directory
+--------------------------
+mkdir <directoryName>
+|
+mkdir Demo1  <----- 
+ls 
+mkdir app Demo2 prod <---
+ls
+cd Demo1 
+pwd
+ |--> /home/ubuntu/Demo1
+ls
+mkdir L1 L2
+ls
+cd L1
+pwd
+|---> /home/ubuntu/Demo1/L1 
+
+			/ <-- root directory --- like MyComputer 
+			|
+	----------------------------------------------------
+	|	|	|	|      |   	|	|  |
+	/bin	/etc	/dev   /root  /home    /var     ...  <==  Sub-directory 
+					|
+					|->ubuntu  => /home/ubuntu
+					|->kumar   => /home/kumar
+					|->anu	   => /home/anu/
+					|->karthik  => /home/karthik/
+
+
+		/
+		|
+		/home
+		   |->ubuntu/
+			|-->Demo1/
+				|
+				|->L1/
+	
+ /home/ubuntu/Demo1/L1/p1.log
+ -------------------------------//Absolute path 			    
+
+
+pwd
+|
+cd ..
+|
+pwd
+cd ..
+|
+pwd
+|->ls
+cd ..
+-----------------------------------------------------------------------
+Go to login path => cd {Enter}
+
+ls
+
+mkdir sales
+
+mkdir prod HR QA
+
+mkdir -p Project/Module1/Module2/Module3
+
+command -<SingleChar>
+	 --------------
+		|->Option  - Specific purpose 
+
+mkdir - command
+
+mkdir -p <== option 
+
+=========================================================================================
+
+mkdir <DirectoryName>
+
+mkdir <dir1> <dir2> .. <dirN>
+
+mkdir -p <dir1>/<sub-dir>/<sub-dir>
+
+cd <DirectoryName>
+
+cd ..
+
+rmdir <directoryName>
+
+rm -r <directoryName>
+
+ls 
+ls -r
+ls -t
+==========================================================================================
+cp  -r  oldDirectory newDirectory
+--  === ___________   _____________
+
+
+mv oldDirectory newDirectory  - Rename
+|
+mv OldDirectory Another_Old_Directory - Move (like Cut ->Paste)
+==========================================================================================
+
+mkdir Demo1 Demo2
+ls
+|-> Demo1 Demo2
+
+mkdir .project1 {Enter}
+
+ls
+cd project1 ->Error 
+ 
+ls -a <== 
+
+cd .project1
+
+ls .project1
+
+===============================================================================================
+
+commandline editor 
+--------------------
+ |-> vi  
+
+vi <filename> {enter} 
+
++--------------------------+
+|
+|  command mode
+|   - save copy paste delete
+|     ...
+|
+|  press i (or) press insert 
+|   |
+|   |->input mode (or) insert mode
+|
+|       ..... //type your text
+|
+| 
++-----------------------------+
+
+vi emp.csv {Enter}
+
+i {Enter}
+
+101,raj,sales,pune,1000
+102,leo,prod,bglore,2000
+103,anu,sales,mumbai,3000
+104,raj,prod,pune,4500
+105,zion,db,chennai,5490
+:wq {Enter}
+-----------------------------------
+|
+ls
+ls -t 
+
+cat emp.csv
+------------------------------------------------------------
+cp oldFile newFile
+
+rm filename 
+
+mv  oldFile newFile  -- rename
+
+mv oldFile oldDirectory -- move 
+
+mv emp.csv e1.csv # rename
+
+ls
+e1.csv
+--------
+mv e1.csv D1 
+    |_______|  //move 
+
+
+
+mv .p1.sh p1.sh <==  Rename 
+|
+mv emp.csv  .emp.csv <== Rename 
+--------------------------------------------------------------------------------------------------
+ls
+  -a
+  -r
+  -t
+  
+-------------------------------------------------------------------------------------------------------- 
+Task1
+------
+
+a. Go to login directory
+b. Display current working directory path
+c. Create a project directory structure in below format
+
+	ERP
+	|
+------------------------------
+|        |           |       |
+SD       Prod       QA      FI
+|         |                  |
+|->ICR   MM                  Accounts
+|->OCR
+
+d. Display ERP/ directory and sub-directories 
+e. Copy ICR directory file into QA directory
+f. Rename directory name MM into Material 
+g. Display ERP directory and sub-directories 
+
+Task2
+-------
+a. Display following system information
+   i.   Date/time
+   ii.  Current working directory
+   iii. Hostname
+   iv.  Kernel name and version
+
+Task3
+------
+a. Explain shortly about following topics
+   i. Kernel  and architecture 
+   ii. Shell and types of shell
+   iii. Difference between Kernel and Shell
+=======================================================================================================
+
+wc <filename>
+wc -l <filename>
+wc -w <filename>
+wc -c <filename>
+
+/etc/passwd
+------------
+ |-> display total no.of lines
+
+wc -l /etc/passwd 
+
+wc -l  /var/log/audit/audit.log
+       =========================
+================================================================================================
+ls - ascending order
+ 
+ls -r -> descending order
+ls -l -> long list
+ls -t -> recently created file
+ls -R -> Recursive list
+ls -a -> All the files
+
+ls -R <directoryName>
+================================================================================================
+We can combine multiple options together in any order
+ex:
+---
+ls -t
+ls -r
+
+ls -tr (or) ls -rt //both are same
+
+ls -ltr (or) ls -rtl (or) ls -tlr 
+==============================================================================================
+		/
+		|
+ --------------------------------------------
+ |	|	..		|	|    |
+
+
+/bin - binary file - not understandable by user 
+       ===========
+	 |-> all unix/linux commands are binary file
+/usr/bin 
+
+/bin
+/usr/bin
+/sbin
+--------------//binary files 
+
+/etc - Configuration file 
+	
+/root - root user login path
+
+/home/userA  - userA login path
+
+/var/log - Log file location 
+/var/mail - mail 
+
+/dev - device files 
+
+/proc - process details
+
+==============================================================================================
