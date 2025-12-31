@@ -1,0 +1,992 @@
+https://github.com/Palanikarthikeyan/Unix_Linux_Induction
+
+Process
+filter commands
+script
+admin commands
+-------------------------------------------------------------------------
+Recap
+------
+Unix/Linux - Kernel - File,Process
+
+File     - Data - Storage device 
+
+Process  - Data - CPU
+
+Whenever new file is created - Kernel - assign unique number - index number(inode)
+ls -i 
+p1.txt 1001
+mkdir Demo => Demo 1002
+
+Whenever new process is created - Kernel - assign unique number - process ID (PID)
+ps
+====================================================================================
+ 	
+1. User process					2. System process
+---------------					-----------------
+by user 					by systemd - PID:1 
+|						|
+After successful login				After Successful bootloading
+shell will get open				systemd is getting started 
+on the top of the shell				|->start all other process
+user commands are get				(before login )
+executed 					|
+|						Login:____ password:____ //system process
+working shell is parent of			|
+user process					not created by user( ? )
+TTY:pts/port					TTY:?
+						|
+						running on the background 
+----------------------------------------------------------------------------------
+ps
+ps -e (or) ps -A 
+
+ps -e|less (or) ps -e|more (or) ps -e|head (or) ps -e|tail
+
+ps -e|wc -l 
+
+cat /etc/passwd|wc -l
+
+ps -e|grep bash|wc -l
+
+
+ps -e|grep -i <processName>  
+ (or)
+ps -e|grep PID
+
+P1 -> PID:101 -->0x1000  - parent
+| 
+P2 -> PID:102 -->0x1001  - child  PPID:101 
+
+						   |->R+
+P1 -> PID:101 -->0x1000  - parent		- Wait    --<----
+|                                                                | Exit Signal
+P2 -> PID:102 -->0x1001  - child  PPID:101 	- Running ---->Exit
+
+
+
+ps -f  # STIME
+
+ps -l  
+
+ps -a 
+
+Admin
+-----
+ps -u <userName>
+
+top
+
+ps -e|grep bash|wc -l 
+
+Vs
+ps;date;sleep 5;uptime
+
+date;ls;top;sleep 600;pwd
+
+
+ping remoteIP
+
+date;ping 127.0.0.1 >ping_report.log;pwd
+-----------------------------------------//
+
+date
+ping 127.0.0.1 >ping_report.log 
+pwd
+
+To transfer to background
+--------------------------
+command &
+[eventID] <processID>
+
+ping 127.0.0.1 >r1.log &
+[1] 1234
+..
+..
+jobs
+[1] Running ...
+---------------
+fg %eventID    <==
+---------------
+fg %1
+-----------------------------------------------------
+Ctrl+C = Exit Signal - forced to terminate - there is no record in process block
+
+Ctrl+Z = Stop Signal - we can resume process state ->Running 
+
+
+command & -> jobs 
+
+command
+...
+ctrl+Z -->stop   ----> jobs
+
+ping 127.0.0.1 >r1.log &
+
+ping 127.0.0.1 >r2.log {Enter}
+..
+..
+Ctrl+Z 
+
+jobs {Enter}
+ 
+fg %2
+---------------------------------------------
+kill -9 <processID> 
+
+kill -9
+      |-->SIGKILL 
+
+Signal 
+------
+Ctrl+C
+Ctrl+Z
+..
+signal()
+-------------------------------------
+#################################################################################
+ps
+ps -l
+ps -f
+ps -e (or) ps -A
+ps -u <userName>
+
+ps -e|grep <processName>
+
+top
+
+ps -e|head
+ps -e|less
+ps -e|tail
+
+ping 127.0.0.1 &
+jobs
+fg %1
+
+ping 127.0.0.1 &
+kill -9 <PID>
+###############################################################################
+
+command >filename
+|
+grep sales emp.csv >s1.txt
+
+command | tee new_filename
+	  ===
+	   |-> create new file and write command results to new_file
+	   |-> duplicate command results to monitor
+
+grep sales emp.csv |tee s2.txt
+
+
+##################################################################################
+Task
+-----
+Create a new file called task1
+|
+use echo statement - display login name,hostname
+		     sleep 5
+		   - display working directory
+		     sleep 5
+		   - display total process count
+		     sleep 5
+		   - display last 5 process
+		   
+assign execute permission to this file
+|      ==================
+run this file in background
+----------------------------------------------------------------
+
+vi task1 {Enter}
+
+echo "Login name is:`whoami` and hostname is:`hostname`"
+sleep 5
+echo "My Working directory path is:`pwd`"
+sleep 3
+echo "Total Number of process count is:`ps -e|wc -l`"
+sleep 5
+echo "Last 5 process list"
+ps -e|tail -n 5
+
+:wq
+chmod u+x task1
+|
+./task1 &
+---------------------------------------------------------------------
+shell script
+------======
+command based 
+
+variable
+operators
+conditional statement
+looping statement
+
+variable - placeholder - holding a value
+				   ------//command, command_result,filename etc.,
+
+operators 
+----------
+  |-> expr command - we can do arithmetic operation 
+  |->arithmetic operators
+  |->relational operators
+  |->logical operators
+
+conditional statement
+----------------------
+ if else code block
+ case statement 
+
+looping statement
+-----------------
+ |->1. conditional style loop
+ |->2. collection style loop
+=====================================================================================
+
+variable
+---------
+ variableName=value
+
+ rule1: variablename - (user defined)
+ |->variablename starts with alpha _ (not digits;not space;not allows specialchars)
+
+ |->the assignment = LHS and RHS  - there is no space 
+
+     myvar=120  # OK
+     
+     myvar =120 # Error
+     myvar= 140 # Error
+     myvar = 140 # Error
+	
+     %myvar=120 # Error
+
+     _myvar=120 # OK
+
+     5var=120 # Error
+     var5=120 # OK
+
+$variableName 
+
+write a shell script
+initialize emp name,emp id,emp basic pay
+use echo command - display emp records
+
+vi p1
+
+emp_name="Mr.Leo"
+emp_id=123
+emp_cost=34562.34
+
+echo "About $emp_name details:-
+--------------------------------
+Emp name is:$emp_name
+$emp_name Emp id:$emp_id
+Basic pay is:$emp_cost
+--------------------------------"
+
+
+About Mr.Leo details:-
+-----------------------
+Emp name is: Mr.Leo
+Mr.Leo Emp id:123
+Basic pay is:34562.34
+------------------------
+
+===========================================================
+echo uname ->uname
+
+echo `uname` ->Linux  (or)  echo $(uname) ->Linux
+
+variable=`command` (or)  variable=$(command) 
+
+os=`uname`
+myhost=$(hostname)
+
+count=`ps -e|wc -l`
+
+v=`cat /etc/passwd|wc -l`
+
+echo $os
+echo $myhost
+echo $count
+echo $v
+
+env {Enter}
+----
+env|grep -i shell
+env|grep -i home
+
+env|less
+
+echo $SHELL
+
+echo $HOME
+echo $PATH
+
+mydb="/usr/bin/oracle"
+echo $mydb
+|
+bash {Enter} # creating new process
+|
+|-> echo $mydb ->Empty
+
+
+all the user defined variables are local variable
+|
+convert from local variable ->global variable(env variable)
+
+export variable=value 
+  (or)
+variable=value
+export variable
+-------------------------
+mydb="/usr/bin/mysql"
+export mydb
+
+env|grep mydb
+
+=================================================================================
+echo $$ ->display current working shell PID
+|
+echo $? ->display last command exit status
+			            =======
+					|-> 0 - Success 
+					|-> non-zero - Failed
+
+cat emp.csv 
+echo $? --> 0
+
+cat pp.log ->No Such File 
+echo $? --> 1
+
+./p1
+permission denied
+
+echo $? -->non-zero
+
+echo $0
+    ====
+      |->Shell commandline - display active/working shell name
+      |
+      |->Inside script file - display working script filename 
+
+root@host~]# echo $0 ->bash
+
+root@host~]# vi p1.sh {Enter}
+echo $0
+:wq
+
+root@host~]# chmod u+x p1.sh {Enter}
+root@host~]# ./p1.sh {Enter}
+./p1.sh 
+--------
+===================================================================================
+expr - evalute arithmetic operation
+----
+expr<space>Expression
+
+expr  Value<space>Operator<space>Value
+
+expr 10 + 20
+
+va=10
+vb=20
+
+expr $va + $vb
+
+==================================================================================
+Relational Operators
+---------------------
+	|->numerical   -eq   -ne  -gt  -ge  -lt  -le
+	|->string	==    !=   
+
+n=45
+
+test  $n -gt 40 ; echo $?
+----  ==========
+ 
+test  $n -lt 40  ; echo $?
+----- ==========
+
+dept="sales"
+
+test $dept == "sales" ;echo $?
+
+root@host~]# test "`whoami`" == "root"  ; echo $?  --> 0
+========================================================
+
+test  `ps -e|wc -l` -gt 100 ; echo $? 
+----  =====================   --------
+
+emp.csv 
+- test total no.of sales dept emp's count is above 5 or not ?
+
+test `grep -c sales emp.csv ` -gt 5  -->(1)
+
+test `cat emp.csv|grep -c sales` -gt 5 -->(2)
+
+test `cat emp.csv|grep sales|wc -l` -gt 5 -->(3)
+
+####################################################################
+test Expression
+|
+test 150 -gt 100
+|
+[<space>Expression<space>]
+--                       --
+
+[ 150 -gt 100 ]
+
+#####################################################################
+Logical operators
+
+In Single conditional statement, Test more than one condition
+
+AND => -a
+OR  => -o
+NOT =>  !
+
+test condition1 <logicalOperator> condition2 
+|
+|
+test "`whoami`" == "root" -a "$SHELL" == "/bin/bash" 
+
+
+test "$SHELL" == "/bin/bash" -o "$SHELL" == "/bin/ksh" 
+
+! test $SHELL == "/bin/bash"
+#################################################################
+test "`whoami`" == "root" -a "$SHELL" == "/bin/bash" 
+
+(or)
+
+[ "`whoami`" == "root" -a  "$SHELL" == "/bin/bash" ]
+
+#################################################################
+i) if only
+===========
+if<space>test Expression
+then
+    True  block
+fi
+---------------------------------------
+
+ii) if else style
+=================
+if<space>test Expression
+then
+    True block
+else
+    False block
+fi
+---------------------------------------
+iii) if elif elif  - multicondition
+====================================
+if<space>test Expression1
+then
+     True block-1
+elif<space>test Expression2
+then
+     True block-2
+elif<space>test Expression3
+then
+     True block-3
+..
+elif<space>test ExpressionN
+then
+     True block-N
+else
+     False block
+fi
+---------------------------------------
+
+if test "`whoami" == "root"
+then
+    echo "your root user"
+    echo "do - admin task"
+else
+    echo "Sorry your not root user"
+fi
+
+(or)
+
+if [ "`whoami" == "root" ]
+then
+    echo "your root user"
+    echo "do - admin task"
+else
+    echo "Sorry your not root user"
+fi
+#####################################################################################
+Looping statements
+-------------------
+|-> code block - execute more than one time
+
+1. conditional style loop
+===========================
+while 
+until 
+
+while loop
+-------------
+ step 1: initialization
+ |
+ step 2: condition
+ |
+ step 3: arithemetic 
+
+
+
+initialization
+while<space>[ condition ]
+do
+    code block
+    arithmetic operation
+done
+
+i=0
+while [ $i -lt 5 ]
+do
+      echo $i
+      i=`expr $i + 1`
+done
+
+# while do done - keywords
+
+
+Write a shell script
+- display cpu loadbalance (uptime) for every 3 secs delay
+  run 5 times
+
+
+i=0
+while [ $i -lt 5 ]
+do
+     uptime
+     sleep 3
+     i=`expr $i + 1`     
+done
+
+i=0
+while [ $i -lt 5 ]
+do
+     uptime
+     sleep 3
+     i=`expr $i + 1`     
+done >r1.log
+ 
+
+-------------------------------------------------------------------
+Write a shell script
+- execute following commands 5 times
+  ps
+  date
+  uptime
+
+  append each command results to separate file.
+
+
+i=0
+while [ $i -lt 5 ]
+do
+  ps >>process.log
+  date >>d1.log
+  uptime >>LB.log
+  i=`expr $i + 1`
+done
+
+-------------------------------------------------------------------
+cp p2.sh p3.sh
+
+vi p3.sh
+
+i=0
+while [ $i -lt 5 ]
+do
+  ps |tee -a process.log
+  date|tee -a d1.log
+  uptime|tee -a LB.log
+  i=`expr $i + 1`
+done
+:wq 
+--------------------------------------------
+
+while :
+do
+     echo Hello
+done
+
+break - exit from loop
+continue - skip the current iteration - continue the loop
+-------
+#############################################################
+
+read UserdefinedVariable
+read -p "UserdefinedPrompt"<space>UserdefinedVariable
+
+echo "Enter a var value:"
+read var
+---Vs
+read -p "Enter a login name:" login_name
+
+
+Write a shell script
+-----------------------
+step 1:  initialize a pin number  (ex: pin=1234)
+|
+step 2: use while loop -limit is 3
+	     |
+	     | -> read a pinNumber from <STDIN>
+	     | -> test a pinNumber with existing pin
+	     | ->   display - input is success - exit from loop(break)
+
+step 3: pin is blocked if all 3 inputs are failed.
+
+
+pin=1234
+count=0
+while [ $count -lt 3 ]
+do
+     count=`expr $count + 1`
+     read -p "Enter a pin:" p
+     if [ $p -eq $pin ]
+     then
+	   echo "Success - pin is matched - $count"
+	   break
+     fi
+done
+
+if [ $p -ne $pin ]
+then
+    echo "Sorry your pin is blocked"
+fi
+-----------------------------------------------------------------
+
+until loop
+-----
+opp. while loop
+
+recap while loop --> initialize it
+		 --> test  -->Condition is True -->Code block will get execute
+		 
+until loop --> initialization is done
+	       test -->Condition is True -->Won't execute the code block
+		       Condition is Fale -->Code block will execute
+
+while ! [ condition ] ---- same as --- until [ condition ]
+
+---------------------------------------------------------------------
+collection style loop
+----------------------
+Syntax:-
+========
+for variable in <Collection>
+do
+	code block
+done
+
+for in do done - shell keywords
+---------------
+
+for var in 1 2 3
+do
+ echo "Hello..$var"
+done
+
+Hello..1
+Hello..2
+Hello..3
+----------------
+
+for var in p1.sh p2.txt p3.log p4.txt
+do
+   echo "file name is:$var"
+done
+
+file name is:p1.sh
+file name is:p2.txt
+file name is:p3.log
+file name is:p4.txt
+
+for var in `ls` 
+do
+   echo "File name is:$var"
+done
+
+------------------------------------
+cat emp.csv|grep sales|cut -d, -f2
+------------------------------------
+for var in `cat emp.csv|grep sales|cut -d, -f2`
+do
+   echo "$var"
+   sleep 1
+done
+
+
+====================================================================
+case statement
+--------------
+ 
+Syntax:-
+---------
+case variable in
+pattern1)  pattern1 operation 
+	   ;;
+pattern2)  pattern2 operation
+	   ;;
+pattern3)  pattern3 operation 
+	   ;;
+pattern4)  pattern4 operation
+	   ;;
+ ..
+patternN)  patternN operation
+ *)  default operation
+esac 
+-----------------------------------------------------------------------
+read -p "Enter a server name:" server
+
+case $server in
+unix) echo "display list of files"
+       ls -l
+       sleep 5
+       clear
+       ;;
+Linux) uname -a ;;
+*) echo "Sorry your input server is not matched"
+esac 
+
+ |
+ |
+ |
+
+read -p "Enter a server name:" server
+
+if [ $server == "unix" ]
+then
+   echo "display list of files"
+   ls -l
+   sleep 5
+   clear
+elif [ $server == "Linux" ]
+then
+    uname -a
+else
+    echo "Sorry your input server is not matched"
+fi
+
+-----------------------------------------------------------------------
+mail commands
+==============
+elm -s "Automated Report" user@example.com < report.txt
+
+pine -attach filename.txt -s "Email with Attachment" recipient@example.com
+
+echo "This is the body of the email." | pine -s "My Subject" recipient@example.com
+
+echo "This is the body of the email." | mailx -s "Email Subject" recipient@example.com
+
+mailx -s "Report for Today" recipient@example.com < /path/to/report.txt
+
+-----------------------------------------------------------------------
+filter commands
+-----------------
+1. read - read the data from file (or) PIPE
+2. store - stores to buffer
+3. execute - execute filter command on the buffer
+4. action 
+
+cut sort paste grep find tr diff comm 
+
+cut -c 3 emp.csv
+cut -c 3,5 emp.csv
+cut -c 3-5 emp.csv
+
+cut -d, -f 3  emp.csv
+cut -d, -f2-5  emp.csv
+
+sort filename
+sort -r filename
+sort -n filename
+
+paste 
+-----
+paste file1 file2
+
+ps >p1.log
+ps >p2.log
+
+paste p1.log p2.log
+paste -s p1.log p2.log # single line -s
+
+paste p1.log p2.log >result
+
+-----------------------------
+grep 
+----
+grep -option pattern filename
+
+find
+----
+find <searchpath> -name <filename>
+
+tr 
+--
+tr 'source' 'target' < inputFile
+
+ps|tr 'a-z' 'A-Z'
+ps|tr '0-9' '#'
+
+diff
+=====
+diff file1 file2
+----
+
+comm
+----
+comm file1 file2
+     ===== ======
+
+cat file1
+p1.c
+p2.c
+p3.c
+p4.c
+
+cat file2
+p3.c
+p4.c
+p5.c
+p6.c
+
+comm file1 file2
+p1.c         p3.c
+p2.c         p4.c 
+      p5.c
+      p6.c
+
+comm -12 file1 file2  # remove 1st column and 2nd Column
+p3.c
+p4.c
+
+comm -13 file1 file2  # remove 1st and 3rd column
+p5.c
+p6.c
+
+===================================================================================
+uniq - omit duplicate line
+----
+
+file1
+------
+unix
+unix
+unix
+101,raj,sales,pune
+101,raj,sales,pune
+------------
+
+uniq file1 {Enter}
+-------------------
+unix
+101,raj,sales,pune
+-------------------
+
+file2
+------
+unix
+winx
+unix
+101,raj,sales,pune
+data
+101,raj,sales,pune
+data
+------------
+
+uniq file2
+------------
+unix
+winx
+unix
+101,raj,sales,pune
+data
+101,raj,sales,pune
+data
+
+sort file2|uniq 
+######################################################################################
+
+ubuntu@ubuntu01~]$ 
+------
+|->non-root user - we can't do admin activity
+
+/home/ubuntu/
+	  - ...
+
+Login as: root
+password: ...
+
+root@host~]# 
+	 |
+	/root
+
+usermanagement
+----------------
+useradd <username>
+
+root@host~]# useradd leo
+		|
+	/etc/passwd = user details(uid,userlogin,default login shell)
+
+	cat /etc/passwd|grep leo
+
+	/etc/shadow = password againg details
+	-----------
+
+	passwd <username>
+	------ ==========
+	
+	passwd leo
+	Enter a password: ...
+	Re-enter your password: ...
+--------------------------------------
+ubuntu@ubuntu01~]$  su -  # switch to root user 
+password: <root user password>
+|
+root@ubutnut01~]# <do admin command>
+----
+
+	+------------+
+	| root
+	+--|----------+
+	   |
+	   |
+	   |-->userA  ----->add this user to sudo user
+	   |   -------
+	   |-->userB
+
+
+userA@host~]$ mkdir /D1 --------->recorded to /home/userA/.bash_history file
+<permission denied>
+
+userA@host~]$ su - 
+password: <root password>
+
+root@host~]# mkdir /D1  ---->recorded to /root/.bash_history file 
+
+
+sudo <admin-Command>
+====
+userA@host~]$ sudo mkdir /D2 	 --->updated to /home/userA/.bash_history file
+Enter a password: userA password 
+		
+		
+###############################################################################
+
+echo "ab"|wc -c ==>3
+
+count=`echo "ab"|wc -c`
+count=`expr $count - 1`
+|
+echo $count
+
+###############################################################################
